@@ -4,6 +4,7 @@
 <img src="https://img.shields.io/badge/Firebase-Firestore-FFCA28?style=for-the-badge&logo=firebase&logoColor=black" />
 <img src="https://img.shields.io/badge/Vite-8-646CFF?style=for-the-badge&logo=vite&logoColor=white" />
 <img src="https://img.shields.io/badge/Face--API.js-AI%20Vision-FF6B6B?style=for-the-badge" />
+<img src="https://img.shields.io/badge/Deployed-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white" />
 <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" />
 
 # 🛡️ VerifyPresence
@@ -11,7 +12,7 @@
 
 **AI-powered, multi-modal attendance verification system that eliminates buddy punching, photo spoofing, and GPS faking — for colleges and enterprises.**
 
-[🔴 Live Demo](https://YOUR-VERCEL-URL.vercel.app) · [📱 Admin Panel](https://YOUR-VERCEL-URL.vercel.app/admin) · [🎓 Student Portal](https://YOUR-VERCEL-URL.vercel.app/student) · [🔍 Try Verification](https://YOUR-VERCEL-URL.vercel.app/verify)
+[🔴 **Live Demo**](https://verifypresence.vercel.app) · [📱 **Admin Panel**](https://verifypresence.vercel.app/admin) · [🎓 **Student Portal**](https://verifypresence.vercel.app/student) · [🔍 **Try Verification**](https://verifypresence.vercel.app/verify)
 
 </div>
 
@@ -61,6 +62,7 @@ Each step is **server-validated** and **non-skippable** — client-side manipula
 - 🗺️ **Live heatmap** — Admin sees student check-in GPS dots on a real-time map
 - 📊 **Audit logs** — Every attempt (success/failure) is timestamped and stored in Firestore
 - 📱 **Mobile-first** — Capacitor-ready for Android APK generation
+- 🌙 **Dark mode UI** — Professional dark theme with glassmorphism design
 
 ---
 
@@ -75,7 +77,7 @@ Each step is **server-validated** and **non-skippable** — client-side manipula
 | **Backend / DB** | Firebase Firestore (real-time NoSQL) |
 | **Auth** | Firebase Authentication |
 | **Mobile** | Capacitor (Android) |
-| **Deployment** | Vercel / Firebase Hosting |
+| **Deployment** | Vercel |
 
 ---
 
@@ -88,8 +90,8 @@ Each step is **server-validated** and **non-skippable** — client-side manipula
 
 ### 1. Clone the repo
 ```bash
-git clone https://github.com/YOUR-USERNAME/proxy-attendance.git
-cd proxy-attendance
+git clone https://github.com/vishnureddy11-22/verifypresence.git
+cd verifypresence
 ```
 
 ### 2. Install dependencies
@@ -106,6 +108,7 @@ VITE_FIREBASE_PROJECT_ID=your_project_id
 VITE_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
 VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
 VITE_FIREBASE_APP_ID=your_app_id
+VITE_FIREBASE_MEASUREMENT_ID=your_measurement_id
 ```
 
 ### 4. Run locally
@@ -119,7 +122,7 @@ Open [http://localhost:5173](http://localhost:5173) 🎉
 ## 📂 Project Structure
 
 ```
-proxy-attendance/
+verifypresence/
 ├── src/
 │   ├── pages/
 │   │   ├── LandingPage/        # Marketing landing page
@@ -146,12 +149,13 @@ proxy-attendance/
 
 ### Option A: Vercel (Recommended — 1 click)
 
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/vishnureddy11-22/verifypresence)
+
+Or via CLI:
 ```bash
 npm install -g vercel
-vercel
+vercel --prod
 ```
-
-Or click: [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/YOUR-USERNAME/proxy-attendance)
 
 > ⚠️ Set your Firebase environment variables in Vercel's dashboard under **Settings → Environment Variables**
 
@@ -218,9 +222,9 @@ OTP input ───────────────────────�
 
 This project was built during a hackathon to demonstrate how **multi-modal AI verification** can completely eliminate proxy attendance fraud in educational institutions and enterprises.
 
-**Team**: [Your Name / Team Name]  
-**Event**: [Hackathon Name]  
-**Category**: AI / EdTech / Security
+**Author**: [vishnureddy11-22](https://github.com/vishnureddy11-22)  
+**Category**: AI / EdTech / Security  
+**Live Demo**: [https://verifypresence.vercel.app](https://verifypresence.vercel.app)
 
 ---
 
@@ -234,6 +238,8 @@ MIT License — see [LICENSE](LICENSE) for details.
 
 Made with ❤️ using React, Firebase & face-api.js
 
-**[⭐ Star this repo if you found it useful!](https://github.com/YOUR-USERNAME/proxy-attendance)**
+**[⭐ Star this repo if you found it useful!](https://github.com/vishnureddy11-22/verifypresence)**
+
+[![Live Demo](https://img.shields.io/badge/🔴%20Live%20Demo-verifypresence.vercel.app-red?style=for-the-badge)](https://verifypresence.vercel.app)
 
 </div>
