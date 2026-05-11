@@ -1,0 +1,13 @@
+{
+  "appId": "com.proxyattendance.app",
+  "appName": "VerifyPresence",
+  "webDir": "dist",
+  "plugins": {
+    "Geolocation": {
+      "permissions": ["location"]
+    }
+  },
+  "android": {
+    "allowMixedContent": true
+  }
+}

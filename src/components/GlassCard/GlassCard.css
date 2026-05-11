@@ -1,0 +1,26 @@
+.glass-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+/* Subtle top accent line — only on hover */
+.glass-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, var(--border-strong) 50%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.glass-card:hover {
+  border-color: var(--border-strong);
+}
+.glass-card:hover::before {
+  opacity: 1;
+}
