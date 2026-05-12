@@ -1,7 +1,8 @@
 import * as faceapi from 'face-api.js';
 
-// Use CDN for face-api.js models
-const MODEL_URL = 'https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@master/weights';
+// Use more reliable CDN for face-api.js models
+const MODEL_URL = 'https://raw.githubusercontent.com/justadudewhohacks/face-api.js/master/weights/';
+
 
 let modelsLoaded = false;
 

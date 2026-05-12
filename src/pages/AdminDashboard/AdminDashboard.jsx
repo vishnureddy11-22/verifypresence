@@ -84,18 +84,45 @@ export function AdminDashboard() {
 
   // --- Listen to active session ---
   useEffect(() => {
+    // 1. Initial load from localStorage (instant)
+    try {
+      const cachedGeo = localStorage.getItem(LS_GEO_KEY);
+      if (cachedGeo) {
+        const parsed = JSON.parse(cachedGeo);
+        if (parsed.latitude) setTargetLat(parsed.latitude.toString());
+        if (parsed.longitude) setTargetLng(parsed.longitude.toString());
+      }
+      const cachedOtp = localStorage.getItem('vp_cached_otp');
+      const cachedTime = localStorage.getItem('vp_cached_otp_time');
+      if (cachedOtp && cachedTime) {
+        const age = Date.now() - parseInt(cachedTime, 10);
+        if (age < 30000) { // Only if valid for 30s
+          setActiveOtp(cachedOtp);
+          setOtpGeneratedAt(parseInt(cachedTime, 10));
+          setOtpSecondsLeft(Math.max(0, 30 - Math.floor(age / 1000)));
+        }
+      }
+    } catch (e) {
+      console.warn('Local session load failed:', e.message);
+    }
+
+    // 2. Listen to Firebase (real-time)
     const unsub = onSnapshot(doc(db, "settings", "active_session"), (docSnap) => {
-      if (docSnap.exists()) {
+      if (docSnap.exists && docSnap.exists()) {
         const data = docSnap.data();
         if (data.otp) setActiveOtp(data.otp);
         if (data.targetLocation) {
-          setTargetLat(data.targetLocation.latitude);
-          setTargetLng(data.targetLocation.longitude);
+          setTargetLat(data.targetLocation.latitude.toString());
+          setTargetLng(data.targetLocation.longitude.toString());
         }
       }
+    }, (err) => {
+      console.warn('Firebase session listener failed:', err.message);
+      // Already loaded from localStorage, so no action needed here
     });
     return () => unsub();
   }, []);
+
 
   // --- Listen to students collection ---
   useEffect(() => {
@@ -463,10 +490,13 @@ export function AdminDashboard() {
 
                     return todayLogs.map((log, i) => {
                       let top = 50, left = 50; // default = center (target)
-                      if (hasTarget && log.coords?.latitude && log.coords?.longitude) {
+                      const logLat = log.coords?.latitude;
+                      const logLng = log.coords?.longitude;
+
+                      if (hasTarget && logLat !== undefined && logLng !== undefined) {
                         // Scale: 0.005° lat/lng ≈ ~500m → map to ±35% from center
-                        const dLat = log.coords.latitude  - tLat;
-                        const dLng = log.coords.longitude - tLng;
+                        const dLat = logLat - tLat;
+                        const dLng = logLng - tLng;
                         const scale = 35 / 0.005; // pixels per degree
                         top  = Math.min(85, Math.max(15, 50 - dLat * scale));
                         left = Math.min(85, Math.max(15, 50 + dLng * scale));
@@ -475,6 +505,7 @@ export function AdminDashboard() {
                         top  = 45 + (i % 3) * 7;
                         left = 42 + (i % 4) * 8;
                       }
+
                       return (
                         <div
                           key={log.id}

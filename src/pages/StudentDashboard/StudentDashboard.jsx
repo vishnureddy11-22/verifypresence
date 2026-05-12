@@ -22,22 +22,49 @@ export function StudentDashboard() {
     return () => clearInterval(t);
   }, []);
 
-  // Listen for active session from Firebase
+  // Listen for active session from Firebase, fall back to localStorage cached OTP
   useEffect(() => {
+    // localStorage fallback: check for a cached OTP that hasn't expired (within 30s)
+    const checkLocalSession = () => {
+      const cachedOtp  = localStorage.getItem('vp_cached_otp');
+      const cachedTime = localStorage.getItem('vp_cached_otp_time');
+      if (cachedOtp && cachedTime) {
+        const age = Date.now() - parseInt(cachedTime, 10);
+        if (age < 30_000) {
+          setSessionActive(true);
+          setSessionTime(new Date(parseInt(cachedTime, 10)));
+          return true;
+        }
+      }
+      return false;
+    };
+
+    // Poll localStorage every second (for demo/offline mode)
+    const pollInterval = setInterval(() => {
+      if (!checkLocalSession()) {
+        setSessionActive(false);
+        setSessionTime(null);
+      }
+    }, 1000);
+
     const unsub = onSnapshot(doc(db, "settings", "active_session"), (snap) => {
-      if (snap.exists() && snap.data().otp) {
+      if (snap.exists && snap.exists() && snap.data().otp) {
         setSessionActive(true);
         const ts = snap.data().timestamp;
         if (ts) {
           setSessionTime(ts.toDate ? ts.toDate() : new Date(ts));
         }
       } else {
-        setSessionActive(false);
-        setSessionTime(null);
+        // Firebase says no session — still check localStorage
+        checkLocalSession();
       }
+    }, () => {
+      // Firebase error — check localStorage
+      checkLocalSession();
     });
-    return () => unsub();
+    return () => { unsub(); clearInterval(pollInterval); };
   }, []);
+
 
   const timeString = now.toLocaleTimeString('en-IN', {
     hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true
