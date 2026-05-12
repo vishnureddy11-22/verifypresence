@@ -71,10 +71,17 @@ export async function getPositionSafe() {
       });
 
       let pos = await getBrowserPos();
-      if (!pos) {
-        console.log('Retrying browser GPS...');
-        pos = await getBrowserPos();
+      if (!pos && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+        console.warn('GPS blocked on localhost. Using mock location for testing.');
+        return {
+          coords: {
+            latitude: 17.3850, // Default to a neutral spot
+            longitude: 78.4867,
+            accuracy: 10
+          }
+        };
       }
+
       return pos;
     }
   } catch (e) {
