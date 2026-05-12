@@ -6,7 +6,7 @@ import {
   ScanFace, Clock, MapPin, KeySquare, CheckCircle,
   Shield, AlertTriangle, Calendar, ChevronRight
 } from 'lucide-react';
-import { doc, onSnapshot } from 'firebase/firestore';
+import { safeDoc as doc, safeOnSnapshot as onSnapshot } from '../../services/firestore';
 import { db } from '../../services/firebase';
 import './StudentDashboard.css';
 

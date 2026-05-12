@@ -1,4 +1,4 @@
-import { doc, getDoc } from 'firebase/firestore';
+import { safeDoc as doc, safeGetDoc as getDoc } from '../services/firestore';
 import { db } from '../services/firebase';
 
 export const MAX_DISTANCE_METERS = 500;

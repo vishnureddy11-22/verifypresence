@@ -7,9 +7,13 @@ import {
   Activity, CalendarCheck, Wifi, WifiOff
 } from 'lucide-react';
 import {
-  doc, setDoc, onSnapshot, collection,
-  addDoc, deleteDoc
-} from 'firebase/firestore';
+  safeDoc as doc,
+  safeSetDoc as setDoc,
+  safeOnSnapshot as onSnapshot,
+  safeCollection as collection,
+  safeAddDoc as addDoc,
+  safeDeleteDoc as deleteDoc,
+} from '../../services/firestore';
 import { db } from '../../services/firebase';
 import { cacheOtp } from '../../utils/otpVerification';
 import './AdminDashboard.css';

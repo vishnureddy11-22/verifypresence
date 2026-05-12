@@ -1,4 +1,4 @@
-import { doc, getDoc, addDoc, collection } from 'firebase/firestore';
+import { safeDoc as doc, safeGetDoc as getDoc, safeAddDoc as addDoc, safeCollection as collection } from '../services/firestore';
 import { db } from '../services/firebase';
 
 // --- Rate limiter (in-memory, resets on page reload) ---
