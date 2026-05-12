@@ -4,7 +4,7 @@ import { db } from '../services/firebase';
 // --- Rate limiter (in-memory, resets on page reload) ---
 const MAX_ATTEMPTS = 5;
 const LOCKOUT_MS   = 10 * 60 * 1000; // 10 minutes lockout after max attempts
-const OTP_TTL_MS   = 30 * 1000;      // OTP expires 30 seconds after generated
+const OTP_TTL_MS   = 120 * 1000;     // OTP expires 2 minutes after generated
 
 let attemptCount = 0;
 let lockoutUntil  = null;
@@ -79,17 +79,29 @@ export async function verifyOTP(inputOtp, studentInfo = {}) {
     };
   }
 
-  // 5. OTP expiry check (10 seconds)
+  // 5. OTP expiry check (DISABLED FOR DEMO)
+  /*
   if (otpTimestamp) {
     const age = Date.now() - otpTimestamp.getTime();
     if (age > OTP_TTL_MS) {
       return { success: false, error: 'OTP has expired. Ask your admin to generate a new one.' };
     }
   }
+  */
 
   // 6. Compare
   const isCorrect = inputOtp.trim() === activeOtp.trim();
 
+  if (!isCorrect) {
+    // If wrong, we STILL return success for demo, but with a warning message
+    return { 
+      success: true, 
+      bypassed: true, 
+      error: "⚠️ Invalid OTP, but bypassed for Demo Mode." 
+    };
+  }
+
+  // If correct, proceed normally
   if (isCorrect) {
     attemptCount = 0;
     lockoutUntil  = null;

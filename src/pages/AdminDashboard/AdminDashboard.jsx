@@ -14,8 +14,9 @@ import {
   safeAddDoc as addDoc,
   safeDeleteDoc as deleteDoc,
 } from '../../services/firestore';
-import { db } from '../../services/firebase';
+import { db, FIREBASE_AVAILABLE } from '../../services/firebase';
 import { cacheOtp } from '../../utils/otpVerification';
+import { getPositionSafe } from '../../utils/geolocation';
 import './AdminDashboard.css';
 
 // --- localStorage helpers (outside component to avoid stale closures) ---
@@ -176,10 +177,21 @@ export function AdminDashboard() {
     const newOtp = Math.floor(100000 + Math.random() * 900000).toString();
     const now = Date.now();
 
+    // Validate coords to prevent NaN
+    const lat = parseFloat(targetLat);
+    const lng = parseFloat(targetLng);
+    
+    if (isNaN(lat) || isNaN(lng)) {
+      setSessionToast({ type: 'error', text: '⚠️ Invalid coordinates. Please enter numbers.' });
+      setTimeout(() => setSessionToast(null), 3000);
+      setIsUpdating(false);
+      return;
+    }
+
     // Always save coords to localStorage immediately (before Firebase attempt)
     const targetLocation = {
-      latitude: parseFloat(targetLat),
-      longitude: parseFloat(targetLng),
+      latitude: lat,
+      longitude: lng,
       setAt: now,
     };
     localStorage.setItem(LS_GEO_KEY, JSON.stringify(targetLocation));
@@ -211,6 +223,27 @@ export function AdminDashboard() {
       setTimeout(() => setSessionToast(null), 4000);
     } finally {
       setIsUpdating(false);
+    }
+  };
+
+  const detectLocation = async () => {
+    setIsUpdating(true);
+    setSessionToast({ type: 'info', text: '📡 Fetching current location...' });
+    
+    try {
+      const pos = await getPositionSafe();
+      if (pos && pos.coords) {
+        setTargetLat(pos.coords.latitude.toFixed(6));
+        setTargetLng(pos.coords.longitude.toFixed(6));
+        setSessionToast({ type: 'success', text: '✓ Location detected!' });
+      } else {
+        setSessionToast({ type: 'error', text: '⚠️ Location not available. Check GPS permissions.' });
+      }
+    } catch (err) {
+      setSessionToast({ type: 'error', text: '⚠️ Failed to get GPS location.' });
+    } finally {
+      setIsUpdating(false);
+      setTimeout(() => setSessionToast(null), 3000);
     }
   };
 
@@ -295,8 +328,15 @@ export function AdminDashboard() {
   return (
     <div className="admin-dashboard animate-fade-in">
       <div className="admin-header">
-        <h2>Institution Dashboard</h2>
-        <p className="text-muted">Real-time attendance &amp; anomaly tracking</p>
+        <div>
+          <h2>Institution Dashboard</h2>
+          <p className="text-muted">Real-time attendance &amp; anomaly tracking</p>
+        </div>
+        {!FIREBASE_AVAILABLE && (
+          <div className="demo-badge-wrap">
+            <span className="demo-badge">⚠️ Demo Mode (Local Only)</span>
+          </div>
+        )}
       </div>
 
       {/* Tab Navigation */}
@@ -388,9 +428,14 @@ export function AdminDashboard() {
                   />
                 </div>
               </div>
-              <PrimaryButton onClick={generateNewSession} disabled={isUpdating} className="w-100">
-                Update Target Coordinates
-              </PrimaryButton>
+              <div className="admin-actions-row">
+                <PrimaryButton onClick={detectLocation} disabled={isUpdating} className="w-100 detect-btn">
+                  {isUpdating ? <Loader2 className="spinner" size={16} /> : <><MapPin size={16} /> Detect My Spot</>}
+                </PrimaryButton>
+                <PrimaryButton onClick={generateNewSession} disabled={isUpdating} className="w-100">
+                  Update Target
+                </PrimaryButton>
+              </div>
             </GlassCard>
           </div>
 

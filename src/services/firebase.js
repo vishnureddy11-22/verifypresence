@@ -36,18 +36,24 @@ if (isConfigured) {
   // Demo mode — create a minimal stub so pages don't crash on import
   console.warn(
     "⚠️ Firebase not configured — running in DEMO mode (localStorage only). " +
-    "Set VITE_FIREBASE_* environment variables to enable live sync."
+    "To enable live sync, update the .env file with your project credentials."
   );
 
-  // Stub auth
+  // Robust stubs to prevent crashes if native functions are accidentally used
   auth = {
     currentUser: null,
-    onAuthStateChanged: (cb) => { cb(null); return () => {}; },
+    onAuthStateChanged: (cb) => {
+      // Simulate an unauthenticated user immediately
+      setTimeout(() => cb(null), 0);
+      return () => {};
+    },
+    signInAnonymously: () => Promise.reject("Firebase not configured"),
   };
 
-  // Stub db — returns objects that silently reject all Firestore calls
-  // Pages gracefully fall back to localStorage already, so this just prevents crashes
-  db = {};
+  db = {
+    type: 'stub',
+    _databaseId: '(default)',
+  };
 }
 
 export { auth, db };

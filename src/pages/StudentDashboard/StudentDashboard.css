@@ -176,3 +176,56 @@
   .student-header { flex-direction: column; gap: 8px; }
   .live-clock { font-size: 18px; }
 }
+
+.demo-badge-small {
+  background: rgba(255, 183, 3, 0.1);
+  border: 1px solid rgba(255, 183, 3, 0.2);
+  color: #ffb703;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+/* History Section */
+.student-history {
+  margin-top: 2rem;
+  padding-bottom: 2rem;
+}
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.history-item {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding: 14px 20px !important;
+}
+.history-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text);
+}
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--primary);
+  box-shadow: 0 0 10px var(--primary);
+}
+.history-time {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+.history-date {
+  font-size: 12px;
+  color: var(--text-2);
+}

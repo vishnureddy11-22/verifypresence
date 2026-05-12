@@ -17,7 +17,7 @@ export function LandingPage() {
       <nav className="landing-nav">
         <div className="landing-brand">
           <Shield className="landing-logo" size={28} />
-          <span className="landing-brand-text">VerifyPresence</span>
+          <span className="landing-brand-text">Proxy Attendance</span>
         </div>
 
         <div className="landing-links">
@@ -191,7 +191,7 @@ export function LandingPage() {
 
       {/* ── Footer ── */}
       <footer className="landing-footer">
-        <span>© 2026 VerifyPresence — Anti-Proxy Attendance System</span>
+        <span>© 2026 Proxy Attendance — Anti-Proxy Attendance System</span>
         <div className="footer-links">
           <button className="landing-link btn-plain" onClick={() => navigate('/admin')}>Admin</button>
           <button className="landing-link btn-plain" onClick={() => navigate('/student')}>Student</button>

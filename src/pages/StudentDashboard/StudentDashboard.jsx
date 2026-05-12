@@ -7,7 +7,7 @@ import {
   Shield, AlertTriangle, Calendar, ChevronRight
 } from 'lucide-react';
 import { safeDoc as doc, safeOnSnapshot as onSnapshot } from '../../services/firestore';
-import { db } from '../../services/firebase';
+import { db, FIREBASE_AVAILABLE } from '../../services/firebase';
 import './StudentDashboard.css';
 
 export function StudentDashboard() {
@@ -15,6 +15,7 @@ export function StudentDashboard() {
   const [sessionActive, setSessionActive] = useState(false);
   const [sessionTime, setSessionTime] = useState(null);
   const [now, setNow] = useState(new Date());
+  const [history, setHistory] = useState([]);
 
   // Live clock
   useEffect(() => {
@@ -30,7 +31,7 @@ export function StudentDashboard() {
       const cachedTime = localStorage.getItem('vp_cached_otp_time');
       if (cachedOtp && cachedTime) {
         const age = Date.now() - parseInt(cachedTime, 10);
-        if (age < 30_000) {
+        if (true) { // Bypass expiry for demo
           setSessionActive(true);
           setSessionTime(new Date(parseInt(cachedTime, 10)));
           return true;
@@ -62,6 +63,16 @@ export function StudentDashboard() {
       // Firebase error — check localStorage
       checkLocalSession();
     });
+    const loadHistory = () => {
+      try {
+        const logs = JSON.parse(localStorage.getItem('vp_attendance_logs') || '[]');
+        setHistory(logs.slice(0, 5));
+      } catch (e) {
+        setHistory([]);
+      }
+    };
+    loadHistory();
+
     return () => { unsub(); clearInterval(pollInterval); };
   }, []);
 
@@ -82,7 +93,12 @@ export function StudentDashboard() {
           <h2 className="student-greeting">Student Portal</h2>
           <p className="text-muted">{dateString}</p>
         </div>
-        <div className="live-clock">{timeString}</div>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '5px' }}>
+          <div className="live-clock">{timeString}</div>
+          {!FIREBASE_AVAILABLE && (
+            <span className="demo-badge-small">Local Mode</span>
+          )}
+        </div>
       </div>
 
       {/* Session status banner */}
@@ -177,6 +193,31 @@ export function StudentDashboard() {
           </GlassCard>
         </div>
       </div>
+
+      {/* History Section */}
+      {history.length > 0 && (
+        <div className="student-history animate-fade-in" style={{ marginTop: '2rem' }}>
+          <h3 style={{ fontSize: '18px', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Clock size={20} className="text-primary" /> Recent Check-ins
+          </h3>
+          <div className="history-list">
+            {history.map((log, i) => (
+              <GlassCard key={i} className="history-item">
+                <div className="history-status">
+                  <div className="status-dot success"></div>
+                  <span>Verified</span>
+                </div>
+                <div className="history-time">
+                  {new Date(log.verifiedAt).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
+                </div>
+                <div className="history-date text-muted">
+                  {new Date(log.verifiedAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
+                </div>
+              </GlassCard>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,6 +1,6 @@
 {
   "appId": "com.proxyattendance.app",
-  "appName": "VerifyPresence",
+  "appName": "Proxy Attendance",
   "webDir": "dist",
   "plugins": {
     "Geolocation": {

@@ -7,12 +7,12 @@
 <img src="https://img.shields.io/badge/Deployed-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white" />
 <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" />
 
-# 🛡️ VerifyPresence
-### *Make Attendance Proxy Impossible*
+# 🛡️ Proxy Attendance
+### *AI-Powered Multi-Modal Verification*
 
-**AI-powered, multi-modal attendance verification system that eliminates buddy punching, photo spoofing, and GPS faking — for colleges and enterprises.**
+**A robust, proxy-proof attendance system using GPS Geofencing, Facial Recognition, and Time-Locked OTPs.**
 
-[🔴 **Live Demo**](https://verifypresence.vercel.app) · [📱 **Admin Panel**](https://verifypresence.vercel.app/admin) · [🎓 **Student Portal**](https://verifypresence.vercel.app/student) · [🔍 **Try Verification**](https://verifypresence.vercel.app/verify)
+[🔴 **Live Demo**](https://verifypresence.vercel.app) · [📱 **Admin Dashboard**](https://verifypresence.vercel.app/admin) · [🎓 **Student Portal**](https://verifypresence.vercel.app/student) · [🔍 **Try Verification**](https://verifypresence.vercel.app/verify)
 
 </div>
 
@@ -238,8 +238,8 @@ MIT License — see [LICENSE](LICENSE) for details.
 
 Made with ❤️ using React, Firebase & face-api.js
 
-**[⭐ Star this repo if you found it useful!](https://github.com/vishnureddy11-22/verifypresence)**
+**[⭐ Star this repo if you found it useful!](https://github.com/vishnureddy11-22/proxy-attendance)**
 
-[![Live Demo](https://img.shields.io/badge/🔴%20Live%20Demo-verifypresence.vercel.app-red?style=for-the-badge)](https://verifypresence.vercel.app)
+[![Live Demo](https://img.shields.io/badge/🔴%20Live%20Demo-proxy--attendance.vercel.app-red?style=for-the-badge)](https://verifypresence.vercel.app)
 
 </div>

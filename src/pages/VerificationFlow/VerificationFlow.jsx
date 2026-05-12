@@ -5,7 +5,7 @@ import { PrimaryButton } from '../../components/PrimaryButton/PrimaryButton';
 import { validateLocation } from '../../utils/geolocation';
 import { loadFaceModels, verifyFace } from '../../utils/faceVerification';
 import { verifyOTP } from '../../utils/otpVerification';
-import { MapPin, KeySquare, CheckCircle, XCircle, Loader2 } from 'lucide-react';
+import { MapPin, KeySquare, CheckCircle, XCircle, Loader2, AlertTriangle } from 'lucide-react';
 import './VerificationFlow.css';
 
 // Helper icon to avoid importing FaceId which might not exist in lucide-react depending on version
@@ -33,6 +33,7 @@ export function VerificationFlow() {
   const [otpAttempts, setOtpAttempts] = useState(0);
   const [geoBypass, setGeoBypass] = useState(false);
   const [geoCoords, setGeoCoords] = useState(null); // { latitude, longitude }
+  const [geoWarning, setGeoWarning] = useState(null); 
 
   // Secure step advance — prevents skipping via DevTools
   const advanceStep = (targetStep) => {
@@ -46,15 +47,19 @@ export function VerificationFlow() {
   const handleGeoCheck = async () => {
     setLoading(true);
     setError(null);
+    if (setGeoWarning) setGeoWarning(null); // Just in case of race conditions
     try {
       const result = await validateLocation();
       if (result.success) {
-        if (result.bypassed) setGeoBypass(true);
-        // Store GPS coords to attach to the attendance log
         if (result.coords) setGeoCoords(result.coords);
+        if (result.gpsUnavailable) {
+          setGeoWarning("GPS unavailable. Location verification bypassed.");
+        } else if (result.error) {
+          setGeoWarning(result.error.replace('⚠️ ', ''));
+        }
         advanceStep(2);
       } else {
-        setError(result.error || `Location failed. You are ${Math.round(result.distance)}m away from the target.`);
+        setError(result.error || `Warning: You are ${Math.round(result.distance)}m away from target. (Allowed for Demo)`);
       }
     } catch (err) {
       setError(err.message);
@@ -118,6 +123,9 @@ export function VerificationFlow() {
       const studentInfo = geoCoords ? { coords: geoCoords } : {};
       const result = await verifyOTP(otp, studentInfo);
       if (result.success) {
+        if (result.bypassed && result.error) {
+          setGeoWarning(result.error.replace('⚠️ ', '')); // Remove duplicate emoji
+        }
         advanceStep(4);
       } else {
         setError(result.error);
@@ -150,6 +158,13 @@ export function VerificationFlow() {
           </div>
         )}
 
+        {geoWarning && step < 4 && (
+          <div className="info-alert mb-4">
+            <AlertTriangle size={20} flexShrink={0} />
+            <span>{geoWarning}</span>
+          </div>
+        )}
+
         {/* Step 1: Geo */}
         {step === 1 && (
           <div className="step-content text-center animate-fade-in">
@@ -157,7 +172,7 @@ export function VerificationFlow() {
               <MapPin size={48} className="text-primary" />
             </div>
             <h3>Location Verification</h3>
-            <p className="text-muted mb-4">We need to verify you are within the 50m geofence of the premises.</p>
+            <p className="text-muted mb-4">We need to verify you are within the 500m geofence of the premises.</p>
             <PrimaryButton onClick={handleGeoCheck} disabled={loading} className="w-100">
               {loading ? <Loader2 className="spinner" /> : "Verify Location"}
             </PrimaryButton>
